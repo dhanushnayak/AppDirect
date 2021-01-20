@@ -290,29 +290,33 @@ class _MyAppState extends State<MyApp> {
           Divider(
             height: 20,
           ),
-         SizedBox(
-            height: 30,
-            width: SizeConfig.safeBlockHorizontal * 100,
-            child: InkWell(
-              
-              onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                            FullData(name: widget.name) ));
-
-              },
-              child:Row(children:[Text(
-              "   Search Related ",
-              textAlign: TextAlign.left,
-              style: GoogleFonts.mada(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-            ),
-            Container(
-              child: Icon(Icons.arrow_forward_ios_rounded,color: Colors.white30,),
-            )
-          ]))),
+          SizedBox(
+              height: 30,
+              width: SizeConfig.safeBlockHorizontal * 100,
+              child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => FullData(
+                              name: widget.name,
+                              search: "names",
+                            )));
+                  },
+                  child: Row(children: [
+                    Text(
+                      "   Search Related ",
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.mada(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Container(
+                      child: Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Colors.white30,
+                      ),
+                    )
+                  ]))),
           SizedBox(
             height: 310, // constrain height
             child: getsimiliarname(),
@@ -320,32 +324,42 @@ class _MyAppState extends State<MyApp> {
           Divider(
             height: 20,
           ),
-         SizedBox(
-            height: 30,
-            width: SizeConfig.safeBlockHorizontal * 100,
-            child: InkWell(
-             onLongPress: (){
-               Tooltip(message: "Keywords",
-               child: Text("View More Results",style: TextStyle(color: Colors.white),),);
-             },
-              onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                            FullData(name: widget.name) ));
-
-              },
-              child:Row(children:[Text(
-              "   Keyword Based ",
-              textAlign: TextAlign.left,
-              style: GoogleFonts.mada(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-            ),
-            Container(
-              child: Icon(Icons.arrow_forward_ios_rounded,color: Colors.white30,),
-            )
-          ]))),
+          SizedBox(
+              height: 30,
+              width: SizeConfig.safeBlockHorizontal * 100,
+              child: InkWell(
+                  onLongPress: () {
+                    Tooltip(
+                      message: "Keywords",
+                      child: Text(
+                        "View More Results",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
+                  },
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => FullData(
+                              name: widget.name,
+                              search: "keywords",
+                            )));
+                  },
+                  child: Row(children: [
+                    Text(
+                      "   Keyword Based ",
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.mada(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Container(
+                      child: Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Colors.white30,
+                      ),
+                    )
+                  ]))),
           SizedBox(
             height: 310, // constrain height
             child: getkeyword(),
@@ -354,28 +368,32 @@ class _MyAppState extends State<MyApp> {
             height: 20,
           ),
           SizedBox(
-            height: 30,
-            width: SizeConfig.safeBlockHorizontal * 100,
-            child: InkWell(
-              
-              onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                            FullData(name: widget.name) ));
-
-              },
-              child:Row(children:[Text(
-              "   Content Based ",
-              textAlign: TextAlign.left,
-              style: GoogleFonts.mada(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-            ),
-            Container(
-              child: Icon(Icons.arrow_forward_ios_rounded,color: Colors.white30,),
-            )
-          ]))),
+              height: 30,
+              width: SizeConfig.safeBlockHorizontal * 100,
+              child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => FullData(
+                              name: widget.name,
+                              search: "content",
+                            )));
+                  },
+                  child: Row(children: [
+                    Text(
+                      "   Content Based ",
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.mada(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Container(
+                      child: Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Colors.white30,
+                      ),
+                    )
+                  ]))),
           SizedBox(
             height: 310, // constrain height
             child: getcontent(),
@@ -478,7 +496,6 @@ class _MyAppState extends State<MyApp> {
                 width: 150,
                 height: 300,
                 padding: new EdgeInsets.all(3.0),
-                
                 child: InkWell(
                   child: Card(
                       shape: RoundedRectangleBorder(
@@ -546,15 +563,9 @@ class _MyAppState extends State<MyApp> {
                   },
                 ),
               ),
-               
-         
             ],
           );
-         
-        }
-        
-        
-        );
+        });
   }
 
   getFirstLetter(String title) {

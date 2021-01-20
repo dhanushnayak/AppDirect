@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
+import 'package:flip_card/flip_card.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +12,13 @@ import 'package:movieapi/model/movieapijson.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:movieapi/pages/search.dart';
 import 'package:movieapi/pages/Details.dart';
-Future<List<Movieapi>> fetchkeyword(name) async {
-  var url = "http://dhanushad.pythonanywhere.com/api/keywords/" + name + "/100";
+
+Future<List<Movieapi>> fetchkeyword(name, search) async {
+  var url = "http://dhanushad.pythonanywhere.com/api/" +
+      search.toString() +
+      "/" +
+      name.toString() +
+      "/100";
   print(url);
   final response = await http.get(url);
 
@@ -32,31 +39,31 @@ Future<List<Movieapi>> fetchkeyword(name) async {
 
 class FullData extends StatefulWidget {
   var name;
-  FullData({this.name});
+  var search;
+  FullData({this.search, this.name});
 
   @override
   _Detailstate createState() => _Detailstate();
 }
+
 class _Detailstate extends State<FullData> {
   List<Movieapi> keyword;
-  int countk=0;
-  final moviek = fetchkeyword("super");
-  
-  @override
-  void initState() { 
-    super.initState();
-    final moviek = fetchkeyword(widget.name);
-     moviek.then((value) {
-      setState(() {
+  int countk = 0;
+  final moviek = fetchkeyword("super", 'names');
 
+  @override
+  void initState() {
+    super.initState();
+    final moviek = fetchkeyword(widget.name, widget.search);
+    moviek.then((value) {
+      setState(() {
         this.keyword = value;
         this.countk = keyword.length;
         print(countk);
-        
       });
     });
-    
   }
+
   _onCustomAnimationAlertPressed(context) {
     Alert(
       context: context,
@@ -95,31 +102,32 @@ class _Detailstate extends State<FullData> {
       ],
     ).show();
   }
+
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return MaterialApp(
         home: Scaffold(
             backgroundColor: Colors.white12,
             body: WillPopScope(
-          child: Center(
-            child: FutureBuilder<List<Movieapi>>(
-              future: this.moviek,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return _buildody();
-                } else if (snapshot.hasError) {
-                  return SpinKitWave(
-                    color: Colors.blueGrey, type: SpinKitWaveType.start);
-                }
+              child: Center(
+                child: FutureBuilder<List<Movieapi>>(
+                  future: this.moviek,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return _buildody();
+                    } else if (snapshot.hasError) {
+                      return SpinKitWave(
+                          color: Colors.blueGrey, type: SpinKitWaveType.start);
+                    }
 
-                // By default, show a loading spinner.
-                return SpinKitWave(
-                    color: Colors.blueGrey, type: SpinKitWaveType.start);
-              },
+                    // By default, show a loading spinner.
+                    return SpinKitWave(
+                        color: Colors.blueGrey, type: SpinKitWaveType.start);
+                  },
+                ),
+              ),
+              onWillPop: _backpress,
             ),
-          ),
-          onWillPop: _backpress,
-        ),
             bottomNavigationBar: CurvedNavigationBar(
                 backgroundColor: Colors.white30,
                 items: <Widget>[
@@ -132,8 +140,7 @@ class _Detailstate extends State<FullData> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => SearchBarDemoApp()));
                   }
-                  if(index==2)
-                  {
+                  if (index == 2) {
                     _backpress();
                   }
                 })));
@@ -143,79 +150,60 @@ class _Detailstate extends State<FullData> {
   Future<bool> _backpress() {
     Navigator.of(context).pop(context);
   }
-  Widget _buildody()
-  {
+
+  Widget _buildody() {
     return Padding(
-      padding: EdgeInsets.all(5),
-      child: 
-        
-          _detaildemo()
-        );
-  }
-  Widget _detaildemo()
-  {
-    var size = MediaQuery.of(context).size;
-
-    /*24 is for notification bar on Android*/
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
-    final double itemWidth = size.width / 2;
-    return GridView.count(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 10.0,
-          childAspectRatio: (itemWidth / itemHeight),
-          controller: new ScrollController(keepScrollOffset: true),
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          
-          children: List.generate(countk, (index) {
-              return Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: InkWell(
-                  onTap: (){
-                    
-                  },
-                  child:Container(
-                  height: 500,
-                  child:Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(this.keyword.elementAt(index).poster.toString()),
-                      fit: BoxFit.cover,
-                    ),
-                    
-
-                    borderRadius: 
-                    BorderRadius.all(Radius.circular(20.0),),
+        padding: EdgeInsets.all(5),
+        child: ListView(
+          children: [
+            Container(
+                height: 50,
+                child: FlipCard(
+                  front: Center(
+                      child: Text(
+                          widget.search.toString().toUpperCase() +
+                              " Based List",
+                          style: GoogleFonts.oxygen(
+                              fontSize: 20, color: Colors.white))),
+                  back: Center(
+                    child: Text(widget.name,
+                        style: GoogleFonts.oxygen(
+                          fontSize: 20,
+                          color: Colors.white,
+                        )),
                   ),
-                ),
-                
-                
-                )));
-            },),
-        );
-      
+                )),
+            _detaildemo(),
+          ],
+        ));
   }
- Widget _detailbuild() {
-   final orientation = MediaQuery.of(context).orientation;
-   return new GridView.builder(
-      gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3),
-      itemCount: this.countk,
-      
+
+  Widget _detaildemo() {
+    return GridView.count(
+      crossAxisCount: 2,
+      crossAxisSpacing: 10.0,
+      mainAxisSpacing: 10.0,
       shrinkWrap: true,
-      itemBuilder: (BuildContext context, int index) {
-        return GridTile(child:Container(
-          width: 200,
-          height: 400,
+      childAspectRatio: 0.8,
+      controller: new ScrollController(keepScrollOffset: true),
+      scrollDirection: Axis.vertical,
+      children: List.generate(
+        countk,
+        (index) {
+          return Card(
+              child: InkWell(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>
+                      Details(movie: keyword.elementAt(index))));
+            },
+            hoverColor: Colors.black87,
+            child: getposterornot(index),
           ));
-       
-      },
-  );
-
-  
-}
-
-
+        },
+      ),
+    );
+  }
 
   getFirstLetter(String title) {
     if (title.length > 35) {
@@ -224,8 +212,42 @@ class _Detailstate extends State<FullData> {
       return title;
     }
   }
+
+  Widget getposterornot(int index) {
+    var rng = new Random();
+    var poster = keyword.elementAt(index).poster.toString();
+    if ((poster.toLowerCase().endsWith('.gif')) ||
+        (poster.toLowerCase().endsWith('icon.svg')) ||
+        (poster.toLowerCase().endsWith('logo.svg'))) {
+      return Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(1.0)),
+          child: Container(
+            color: Colors.accents[rng.nextInt(15)],
+            child: Center(
+              child: Text(
+                keyword.elementAt(index).title.toString(),
+                style: GoogleFonts.oxygen(
+                  backgroundColor: Colors.transparent,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ));
+    } else {
+      return Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1.0)),
+        child: FadeInImage.assetNetwork(
+          placeholder: 'needed3.gif',
+          image: poster,
+          fit: BoxFit.fill,
+        ),
+      );
+    }
+  }
 }
-  
+
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
   static double screenWidth;
@@ -251,5 +273,3 @@ class SizeConfig {
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
   }
 }
-
-
