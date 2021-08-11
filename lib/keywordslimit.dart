@@ -152,8 +152,8 @@ class _MyAppState extends State<MyApp> {
   _onCustomAnimationAlertPressed(context) {
     Alert(
       context: context,
-      title: "RFLUTTER ALERT",
-      desc: "Flutter is more awesome with RFlutter Alert.",
+      title: "",
+      desc: "",
       alertAnimation: FadeAlertAnimation,
     ).show();
   }
@@ -216,6 +216,7 @@ class _MyAppState extends State<MyApp> {
               future: this.moviek,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  print("DATA");
                   return _buildChild();
                 } else if (snapshot.hasError) {
                   return _onAlertButtonPressed(context);

@@ -14,7 +14,7 @@ import 'package:movieapi/pages/search.dart';
 import 'package:movieapi/pages/Details.dart';
 
 Future<List<Movieapi>> fetchkeyword(name, search) async {
-  var url = "http://dhanushad.pythonanywhere.com/api/" +
+  var url = "https://dhanushad.pythonanywhere.com/api/" +
       search.toString() +
       "/" +
       name.toString() +

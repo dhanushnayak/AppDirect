@@ -43,8 +43,7 @@ class _Detailstate extends State<Details> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => SearchBarDemoApp()));
                   }
-                  if(index==2)
-                  {
+                  if (index == 2) {
                     _backpress();
                   }
                 })));

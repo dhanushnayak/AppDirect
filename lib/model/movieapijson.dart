@@ -3,14 +3,15 @@ import 'dart:convert';
 
 //import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-void main()
-async {
-final respo = await http.get("http://dhanushad.pythonanywhere.com/api/keywords/dhanush/1");
-List jos = json.decode(respo.body);
-var lst = jos.map((e) => Movieapi.fromJson(e));
-print(lst);
 
+void main() async {
+  final respo = await http
+      .get("https://dhanushad.pythonanywhere.com/api/keywords/dhanush/1");
+  List jos = json.decode(respo.body);
+  var lst = jos.map((e) => Movieapi.fromJson(e));
+  print(lst);
 }
+
 class Movieapi {
   String genres;
   String keywords;
